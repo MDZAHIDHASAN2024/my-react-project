@@ -1,61 +1,61 @@
 import React, { useState } from 'react';
 
 const Test = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState({ name: '', email: '', password: '' });
+  const { name, email, password } = user;
 
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-  const hangeEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+  const handleChange = (e) => {
+    const fieldName = e.target.name;
+    if (fieldName === 'name') {
+      setUser({ name: e.target.value, email, password });
+    }
+    if (fieldName === 'email') {
+      setUser({ name, email: e.target.value, password });
+    }
+    if (fieldName === 'password') {
+      setUser({ name, email, password: e.target.value });
+    }
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const userInfo = {
-      name,
-      email,
-      password,
-    };
-    console.log(userInfo);
+
+    console.log(user);
   };
 
   return (
     <div>
       <form action="" onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="name"> Name: </label>
+          <label htmlFor="name">Name:</label>
           <input
             type="text"
             name="name"
             id="name"
+            required
             value={name}
-            onChange={handleNameChange}
+            onChange={handleChange}
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="email"> Email: </label>
+          <label htmlFor="email">Email:</label>
           <input
             type="email"
             name="email"
             id="email"
+            required
             value={email}
-            onChange={hangeEmailChange}
+            onChange={handleChange}
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="password"> Password: </label>
-          <label htmlFor="password"> Password: </label>
+          <label htmlFor="password">Name:</label>
           <input
             type="password"
             name="password"
             id="password"
+            required
             value={password}
-            onChange={handlePasswordChange}
+            onChange={handleChange}
           />
         </div>
         <button type="submit">Submit</button>
