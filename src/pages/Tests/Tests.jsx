@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
 
 const Test = () => {
-  const [text, setText] = useState();
-
-  const handleChange = (e) => {
-    setText(e.target.value);
+  const handleChild = (e) => {
+    e.stopPropagation();
+    console.log(e);
+  };
+  const handleParent = (e) => {
+    console.log(e);
   };
 
   return (
     <div>
-      <input onChange={handleChange} type="text" name="" id="" />
-      <h2>{text}</h2>
+      <div className="border" onClick={handleParent}>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero alias
+          voluptate iste dicta pariatur laudantium rem beatae exercitationem
+          cupiditate nihil.
+        </p>
+        <div onClick={handleChild} className="border">
+          <button>click</button>
+        </div>
+      </div>
     </div>
   );
 };
