@@ -1,81 +1,40 @@
 import React from 'react';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
+import { useEffect, useState } from 'react';
 
 const Tests = () => {
-  // use formik here
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      password: '',
-    },
-    onSubmit: (values) => {
-      console.log(values);
-    },
+  const [todos, setTodos] = useState(null);
+  const [isLoading, setIsLoadign] = useState(true);
+  const [error, setError] = useState(null);
 
-    // use yup here
-    validationSchema: yup.object({
-      name: yup
-        .string()
-        .min(2, 'Name have must atleast 2 charachers')
-        .required(),
-      email: yup.string().email().required(),
-      password: yup
-        .string()
-        .min(6, 'Name have must atleast 6 charachers')
-        .required(),
-    }),
+  useEffect(() => {
+    setTimeout(() => {
+      fetch('https://jsonplaceholder.typicode.com/post')
+        .then((res) => {
+          if (!res.ok) {
+            throw Error('Data is not fatched');
+          } else {
+            return res.json();
+          }
+        })
+        .then((data) => {
+          setTodos(data);
+          setIsLoadign(false);
+          setError(null);
+        })
+        .catch((error) => {
+          setError(error.message);
+          setIsLoadign(false);
+        });
+    }, 2000);
   });
-
-  // formik error handle here
-  const renderNameError = formik.touched.name && formik.errors.name && (
-    <span>{formik.errors.name}</span>
-  );
-  const renderEmailError = formik.touched.email && formik.errors.email && (
-    <span>{formik.errors.email}</span>
-  );
-  const renderPasswordError = formik.touched.password &&
-    formik.errors.password && <span>{formik.errors.password}</span>;
-
   return (
     <div>
-      <form action="" onSubmit={formik.handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-          />
-        </div>
-        <div className="text-danger">{renderNameError}</div>
-        <div className="mb-3">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-          />
-        </div>
-        <div className="text-danger">{renderEmailError}</div>
-        <div className="mb-3">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-          />
-        </div>
-        <div className="text-danger">{renderPasswordError}</div>
-        <button type="submit">Submit</button>
-      </form>
+      {error && <p>{error}</p>}
+      {isLoading && <p>Data is Loading...</p>}
+      {todos &&
+        todos.map((todo) => {
+          return <p key={todo.id}> {todo.title}</p>;
+        })}
     </div>
   );
 };
